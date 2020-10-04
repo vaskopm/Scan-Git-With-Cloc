@@ -7,6 +7,7 @@ from email import encoders
 from email.mime.base import MIMEBase
 import getpass
 import shutil
+from sys import platform
 
 #Create input folder
 inputFolder = "InputFolder"
@@ -23,15 +24,18 @@ print('Files extracted!')
 
 #Run cloc
 file_result = "result.txt"
-os.system("cloc.exe InputFolder --out=" + file_result)
+if platform == "win32":
+    os.system("cloc.exe InputFolder --out=" + file_result)
+else:
+    os.system("cloc InputFolder --out=" + file_result)
 
 #Send email with result file
-sender = 'your-sender-email'
+sender = 'sender-email'
 serverPassw = getpass.getpass("SMTP Server password: ")
 receiver = input("Receiver email: ")
 
 try:
-    server = smtplib.SMTP('your-smtp-server') #server = smtplib.SMTP('your-smtp-server', port-number)
+    server = smtplib.SMTP('your-smtp-server', 587) #587 - port number
     message = MIMEMultipart()
     message["From"] = sender
     message["To"] = receiver
